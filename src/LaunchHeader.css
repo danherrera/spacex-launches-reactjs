@@ -1,0 +1,55 @@
+.launch-row-header {
+    color: #043D67;
+    width: 956px;
+    margin: auto;
+    display: flex;
+    background: linear-gradient(#9DB7CD, #FFFFFF);
+    padding: 16px;
+    margin-bottom: 8px;
+}
+
+.launch-row-header-item {
+    display: inline-block;
+    padding-right: 8px;
+    text-align: left;
+}
+
+.badge {
+    width: 89px;
+}
+
+.badge-image {
+    width: 33px
+}
+
+.rocket-name {
+    width: 114px;
+}
+
+.rocket-type {
+    width: 130px;
+}
+
+.launch-date {
+    width: 129px;
+}
+
+.launch-details {
+    width: 340px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.launch-id {
+    width: 54px;
+}
+
+.launch-article {
+    width: 42px;
+}
+
+.launch-article-icon {
+    width: 21px;
+    height: 21px;
+}

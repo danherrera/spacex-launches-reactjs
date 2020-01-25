@@ -1,0 +1,25 @@
+.app {
+  text-align: center;
+  color: #ffff;
+  font-family: GeomanistRegular;
+}
+
+@font-face {
+  font-family: GeomanistRegular;
+  src: url('./assets/fonts/geomanist-regular-webfont.woff2')
+}
+
+.launches-title {
+  font-size: 64px;
+  padding: 32px;
+}
+
+html {
+  /* background-color: #090E23; */
+}
+
+body {
+  background-image: url("/images/background.jpg");
+  background-attachment: fixed;
+  overscroll-behavior: none;
+}

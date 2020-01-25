@@ -1,0 +1,33 @@
+.launch-options {
+    width: 986px;
+    background: rgba(255, 255, 255, 0.07);
+    margin: auto;
+    display: flex;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-color: rgba(255, 255, 255, 0.66);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.launch-options-refresh {
+    width: 21px;
+    height: 21px;
+    padding: 4px;
+    margin: 18px;
+    border-radius: 44px;
+    border: 1px solid;
+    border-color: #FFF;
+}
+
+.launch-options-refresh:active {
+    width: 21px;
+    height: 21px;
+    padding: 4px;
+    margin: 18px;
+    border-radius: 44px;
+    border: 1px solid;
+    border-color: #FFF;
+    background-color: rgba(255, 255, 255, 0.20);
+}
