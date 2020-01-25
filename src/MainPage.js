@@ -7,7 +7,8 @@ import launchesApi from './api/launches.js'
 export default class MainPage extends Component {
 
     state = {
-        launches: []
+        launches: [],
+        error: ""
     };
 
     async componentDidMount() {
@@ -15,17 +16,35 @@ export default class MainPage extends Component {
     }
 
     refresh = async () => {
-        const response = await launchesApi.get('/launches')
-        this.setState({launches: response.data})
+        try {
+            const response = await launchesApi.get('/launches')
+            if (response.status === 200) {
+                this.setState({launches: response.data, error: ""})
+            } else {
+                this.setState({error: "Something went wrong. :("})
+            }
+        } catch (err) {
+            this.setState({error: "Something went wrong. :("})
+        }
     }
 
     render() {
-        return (
-            <div className="container main-page">
-                <LaunchOptions onClick={this.refresh} />
-                <LaunchHeader />
-                <LaunchList launches={this.state.launches} />
-            </div>
-        )
+        if (this.state.error === "") {
+            return (
+                <div className="container main-page">
+                    <LaunchOptions onClick={this.refresh} />
+                    <LaunchHeader />
+                    <LaunchList launches={this.state.launches} />
+                </div>
+            )
+        } else {
+            return (
+                <div className="container main-page">
+                    <LaunchOptions onClick={this.refresh} />
+                    <LaunchHeader />
+                    <div>{this.state.error}</div>
+                </div>
+            )
+        }
     }
 }
