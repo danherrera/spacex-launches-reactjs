@@ -1,82 +1,86 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import LaunchHeader from './LaunchHeader'
 import LaunchList from './LaunchList'
 import LaunchOptions from './LaunchOptions'
 import launchesApi from './api/launches.js'
-import createReactClass from 'create-react-class'
 
-export default class MainPage extends Component {
-
-    state = {
-        launches: [],
-        options: {
-            isLandChecked: true,
+export default function MainPage(props) {
+    const [launches, setLaunches] = useState([])
+    const [options, setOptions] = useState({
+            isLandChecked: false,
             isReusedChecked: false,
             isWithRedditChecked: false
-        },
-        error: ""
-    };
+    })
+    const [error, setError] = useState('')
 
-    async componentDidMount() {
-        this.refresh()
-    }
-
-    refresh = async () => {
+    async function refresh() {
         try {
             const response = await launchesApi.get('/launches')
             if (response.status === 200) {
-                this.setState({
-                    launches: response.data
-                        .filter(launch => this.state.options.isLandChecked ? launch.launch_success : true) 
-                        .filter(launch => this.state.options.isReusedChecked ? launch.any_parts_reused : true)
-                        .filter(launch => this.state.options.isWithRedditChecked ? launch.reddit_launch_link !== "" : true),
-                    options: this.state.options,
-                    error: ""
-                })
+                setError('')
+                setLaunches(response.data)
             } else {
-                this.setErrorState()
+                setError('Something went wrong :(')
             }
         } catch (err) {
-            this.setErrorState()
+            setError('Something went wrong :(')
         }
     }
 
-    setErrorState() {
-        this.setState({
-            error: "Something went wrong. :(",
-            options: this.state.options
+    function onLandChange(value) {
+        setOptions({
+            isLandChecked: value,
+            isReusedChecked: options.isReusedChecked,
+            isWithRedditChecked: options.isWithRedditChecked
         })
     }
 
-    onLandChange = (value) => {
-        console.log(`LAND CHANGE= ${value}`)
+    function onReusedChange(value) {
+        setOptions({
+            isLandChecked: options.isLandChecked,
+            isReusedChecked: value,
+            isWithRedditChecked: options.isWithRedditChecked
+        })
     }
 
-    onReusedChange(value) {
-        console.log(`REUSED CHANGE= ${value}`)
+    function onRedditChange(value) {
+        setOptions({
+            isLandChecked: options.isLandChecked,
+            isReusedChecked: options.isReusedChecked,
+            isWithRedditChecked: value
+        })
     }
 
-    onRedditChange(value) {
-        console.log(`REDDIT CHANGE= ${value}`)
-    }
+    useEffect(() => { refresh() }, [])
 
-    render() {
-        if (this.state.error === "") {
-            return (
-                <div className="container main-page">
-                    <LaunchOptions onClick={this.refresh} />
-                    <LaunchHeader />
-                    <LaunchList launches={this.state.launches} />
-                </div>
-            )
-        } else {
-            return (
-                <div className="container main-page">
-                    <LaunchOptions onClick={this.refresh} handleLandChecked={this.onLandChange} handleReusedChecked={this.onReusedChange} handleRedditChecked={this.onRedditChange} />
-                    <LaunchHeader />
-                    <div>{this.state.error}</div>
-                </div>
-            )
-        }
+    if (error === "") {
+        const filteredLaunches = launches
+            .filter(launch => options.isLandChecked ? launch.launch_success : true)
+            .filter(launch => options.isReusedChecked ? launch.any_parts_reused : true)
+            .filter(launch => options.isWithRedditChecked ? launch.reddit_launch_link : true)
+            .map(launch => options.isWithRedditChecked ? Object.assign(launch, { article_link: launch.reddit_launch_link }) : launch)
+        return (
+            <div className="container main-page">
+                <LaunchOptions onClickRefresh={refresh}
+                    onClickRefresh={refresh}
+                    handleLandChecked={onLandChange}
+                    handleReusedChecked={onReusedChange}
+                    handleRedditChecked={onRedditChange} />
+                <LaunchHeader />
+                <LaunchList launches={filteredLaunches} />
+            </div>
+        )
+    } else {
+        return (
+            <div className="container main-page">
+                <LaunchOptions
+                    onClickRefresh={refresh}
+                    handleLandChecked={onLandChange}
+                    handleReusedChecked={onReusedChange}
+                    handleRedditChecked={onRedditChange} />
+                <LaunchHeader />
+                <div>{error}</div>
+            </div>
+        )
     }
 }
