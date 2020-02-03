@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 import launchesApi from './launches.js'
 
 it('launches api has base url', () => {
